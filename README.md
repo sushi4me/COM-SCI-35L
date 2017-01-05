@@ -1,1 +1,1 @@
-# COM-SCI-35L
+# COM SCI 35L
