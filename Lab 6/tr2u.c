@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
   char *charA = argv[1];
   char *charB = argv[2];
 
+  // Check number of arguments
   if (argc > 3) {
     fprintf(stderr, "ERROR: Too many arguments\n");
     exit(1);
@@ -21,12 +22,15 @@ int main(int argc, char *argv[]) {
 
   int CONST = 1;
   int a, b;
+	
+  // Make sure they are not attempting to map one letter to many
   for(a = 0; a < strlen(argv[CONST]); a++)
     for(b = a+1; b < strlen(argv[CONST]); b++)
       if(argv[CONST][a] == argv[CONST][b]) {
 	fprintf(stderr, "ERROR: You're mapping one letter to many\n");
 	exit(1);
       }
+	
   // Check argv for same length
   int i = 0;
   while(charA[i] != '\0' && charB[i] != '\0')
