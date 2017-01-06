@@ -1,0 +1,107 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab2.log
+
+LABORATORY: SPELL-CHECKING HAWAIIAN:
+
+The following commands can be described as:
+
+    1. tr -c 'A-Za-z' '[\n*]'
+       The file that this command operates on will replace all characters that
+       is not A-Z or a-z, and replace it with the new line character, due to 
+       the complement option. Therefore the output is a file that separates all
+       string of Latin characters on new lines.
+    
+    2. tr -cs 'A-Za-z' '[\n*]'
+       The command will output a file that replaces all characters that is not
+       A-Z or a-z, and replace it with the new line character.  However, the 
+       s-option compresses sequences of identical adjacent characters as one.
+       An exmaple would be instead of three spaces being replaced with three 
+       new lines, there would only be one new line since the three consecutive
+       spaces are compressed into one.
+
+    3. tr -cs 'A-Za-z' '[\n*]' | sort
+       The command will output the same file as the previous command #2.
+       Afterwards, the separated strings in order according to the locale 
+       ordering, therefore the strings will sort upper case higher than lower
+       case in the locale 'C'.
+
+    4. tr -cs 'A-Za-z' '[\n*]' | sort -u
+       The command will operate similarly to command #3, however the output will
+       only have a unique list of sorted lines.  For example, if the string of
+       characters 'ABC' appears twice after the translate command, it will only
+       appear once in the list after sorting.
+
+    5. tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words
+       The command will compare the words in the sorted HTML file and words.
+       The first column will contain words unique to the HTML file, second
+       column will contain words unique to the words file, and third column
+       will contain words seen in both files.
+
+    6. tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
+       The command will yield a similar output to command #5, however it will
+       suppress the second and third columns meaning the only output is the
+       column displaying words unique only to the sorted HTML file.
+
+The following file is the buildwords script:
+
+#Nathan Kong
+#204 401 093
+
+#!/bin/bash
+
+#Get all words within the <td> tag
+grep -E '<td>.,</td>' |
+
+#Only grab the even lines, the odd lines are English
+awk 'NR%2==0' |
+
+#Remove blackslashes
+sed 's/\///g' |
+
+#Remove <td> tags
+sed 's/<td>//g' |
+
+#Remove <u> tags
+sed 's/<u>//g' |
+
+#Remove spaces
+sed 's/ //g' |
+
+#Replace commas with new lines
+sed 's/,/\n/g' |
+
+#Replace backticks with single quote
+sed "s/\`/'/g" |
+
+#Lower case
+tr '[:upper:]' '[:lower:]' |
+
+#Remove non-Hawaiian words
+grep "[pk'mnwlhaeiou]\+$" |
+
+#Sort
+sort -u
+
+Number of misspelled English words on CS35L HTML page:
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - words
+   > misspell_eng.txt
+Count the number of misspelled words:
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - words | wc -l
+The number of words misspelled in English is 81 words.
+
+Number of misspelled Hawaiian words on CS35L HTML page:
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - hwords 
+   > misspell_hwn.txt
+Count the number of misspelled words:
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - hwords | wc -l
+The number of words misspelled in Hawaiian is 456 words.
+
+The number of misspelled words in English but not Hawaiian can be found:
+comm -23 misspell_eng.txt misspell_hwn.txt | wc -l
+There are 2 words; ex. halau, wiki
+
+The number of misspelled words in Hawaiian but not English can be found:
+comm -13 misspell_eng.txt misspell_hwn.txt | wc -l
+There are 373 words; ex. words, upper, tables

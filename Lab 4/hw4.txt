@@ -1,0 +1,48 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	hw4.txt
+
+1.	I created a new diffutils directory since the patch would notify me of
+	reverting changes.
+
+2.	I checked out and created a new branch.
+	> git checkout v3.0 -b quote
+
+3.	Apply the patch:
+	> patch -p1 < quote-3.0-patch.txt
+	This notified me that there were 6 files that were patched.
+
+4.	Addded a change log entry using the emacs 'C-x 4 a' command.
+
+5.	-
+
+6.	Commit the changes to the new branch:
+	> git add .
+	> git commit -F ChangeLog
+
+7.	Generate a new patch using:
+	> git format-patch -1 --stdout > formatted-patch.txt
+
+8.	Edison Vallejo | 704 509 152 | Lab 4
+	I will need to create a new branch 'partner' to apply someone else's
+	patch:
+	> git checkout v3.0 -b partner
+	> git am < formatted-patch.txt
+	Then build it:
+	> ./bootstrap
+	> ./configure
+	> make
+	> make check
+
+9.	Verify the ChangeLog entry by using:
+	> make distdir
+	> cd diffutils*
+	Opening the ChangeLog file will show the entries my partner had written
+	for the 6 files prior.
+
+10.	Clone a new 'emacs' repository:
+	> git clone git://git.savannah.gnu.org/emacs.git
+	I then used Putty and XMing to connect to lnxsrv02 and open up gitk in
+	emacs. The merge that appeared to be no later than January 25, 2015 was
+	"Merge branch 'master' into xwidget".

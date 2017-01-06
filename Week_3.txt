@@ -1,0 +1,25 @@
+COM SCI 35L
+Week 3
+
+If we compile a program this way:
+
+	gcc -Wall item.cpp shoppingList.cpp shop.cpp -o shop
+
+then this will prove problematic if we were to change the contents of a header file.  Therefore we should use:
+
+	gcc -Wall -c item.cpp
+	gcc item.o shoppingList.o shop.o -o shop
+
+This yields more commands but shortens the compilation.
+
+* configure
+	Checks dettails about the machine before installation
+	Creates 'Makefile'
+* make
+	Requires 'Makefile' to run
+	Compiles all the program code and creates executables in current temp. dir
+
+* make install
+	Executables are copied into system files
+
+

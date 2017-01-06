@@ -1,0 +1,28 @@
+Name:	Nathan Kong
+UID: 	204 401 093
+TA:	Aishwarya Kamal
+File:	hw3.txt
+
+LABORATORY: INSTALLING A SMALL CHANGE TO A BIG PACKAGE
+
+Q1. The line "case_long_iso_time_style:" was deleted because it was a duplicate
+    line within a case statement. Having removed the line or not the case above
+    which was the same would have simply fell through.
+
+Q2. In other countries which do not understand English-format dates, this patch
+    would simply cause confusion.  However this patch may cause bugs if there 
+    is code which pulls the dates of files, there would be a big difference in
+    data representation for integer 10 instead of "Oct".
+
+Q3. The randline.py file uses the 'choice' function of random, giving randline
+    an empty file will raise IndexError (from Python documentation of random).
+    In particular we should see "IndexError: list index out of range" due to
+    the existence of an empty list when the expected argument for 'choice'
+    should have at least one element.
+
+Q4. Running randline.py in Python3 gives the error:
+    	    except IOError as (errno, strerror):
+	    SyntaxError: invalid syntax
+    This error is brought on by the fact that exceptions in Python 2 are
+    iterable, this is not the case in Python 3.  Python 2 iterates its arg
+    parameters by iterating through the exception itself.

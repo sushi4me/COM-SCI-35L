@@ -1,0 +1,54 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	log.txt
+
+Checking the version of sort:
+> export PATH=/usr/local/cs/bin:$PATH
+> sort --version
+sort (GNU coreutils) 8.25
+
+1. Create a file with 10,000,000 double-precision floating point numbers.
+   -A n:     	file offset set as none
+   -t f8:	specify the type to be floating point of 8 bytes
+   -N 80000000: limit to 80000000 bytes
+   
+   And replace spaces as newlines.
+   > od -A n -t f8 -N 80000000 < /dev/urandom | tr -s ' ' '\n' > random.txt
+
+2. There is an empty line in the file as the first line.
+   > sed -i '1d' random.txt
+
+3. Check if there are actually 10,000,000 floating point numbers.
+   > wc -l random.txt
+
+4. Executing 'sort' without parallelism:
+   > time -p sort -g random.txt > /dev/null
+     real 36.38
+     user 195.33
+     sys  0.56
+   Executing 'sort' with parallelism:
+   > time -p sort -g --parallel=1 random.txt > /dev/null
+     real 191.74
+     user 191.43
+     sys  0.31
+
+   > time -p sort -g --parallel=2 random.txt > /dev/null
+     real 100.46
+     user 192.04
+     sys  0.38
+
+   > time -p sort -g --parallel=4 random.txt > /dev/null
+     real 56.72
+     user 193.76
+     sys  0.43
+
+   > time -p sort -g --parallel=8 random.txt > /dev/null
+     real 36.58
+     user 195.47
+     sys  0.57
+   
+   The multithread performance improves as the number of concurrent sorts are
+   being ran. However, notice that the performance improvement when the number
+   of threads gets higher is reduced. There is only a finite amount of
+   improvement that can be achieved by adding threads.

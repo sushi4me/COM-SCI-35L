@@ -1,0 +1,55 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab.txt
+
+Partner:Griffin Romanek
+UID:	304 652 415
+
+Insert the disk and restart the computer, the Ubuntu prompt should appear. Click
+on TRY Ubuntu in order to prevent installing Ubuntu onto the machine. 
+
+1.	Make sure the proper files are installed:
+	> dpkg --get-selections | grep openssh
+	I did not have openssh-server installed, so I used:
+	> sudo apt-get install openssh-server
+
+2.	CLIENT STEPS
+        Generate a public & private key:
+        > ssh-keygen
+	By default we can find the public and private keys in:
+	~/.ssh/is_rsa
+	~/.ssh/id_rsa.pub
+
+3.      Copy this key for key-based authentification
+        > ssh-copy-id -i nathank@10.97.85.138
+        Add the private key:
+        > ssh-add
+        Connect to the server:
+        > ssh -X nathank@10.97.85.138
+        We use the -X option to allow X11 forwarding. Attempt to run an
+        application such as gedit, firefox or xterm.        
+        
+4.      Attempting to open up gedit or firefox yielded some warnings however,
+        they did not prevent them from opening. Xterm opened up perfectly fine.
+
+5.	SERVER STEPS
+	Generate a public & private key:
+	> ssh-keygen
+	I did not add a password for the key.
+
+6.	Add a new user for the client:
+	> sudo useradd -d /home/homedir -m griffinr
+	> sudo passwd
+
+7.	We create a new .ssh directory for the new user in /home/homdir:
+	> sudo mkdir .ssh
+	> sudo chown -R griffinr .ssh
+	> sudo chmod 700 .ssh
+	We can also disable password-based authentication using:
+	> gedit /etc/ssh/ssh_config
+	Change #PasswordAuthentication from 'yes' to 'no'
+
+8.      Griffin went through similar steps mentioned in CLIENT STEPS.
+        However, he would connect to me using the command:
+        > ssh -X griffinr@10.97.85.142

@@ -1,0 +1,80 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab4.txt
+
+LABORATORY: MANAGING A BACKPORTED CHANGE
+
+1.    I cloned a the Diffutils repository using:
+      > git clone ~eggert/src/gnu/diffutils
+
+2.    Export the log into a text file:
+      > git log > git-log.txt
+
+3.    Export the tags into a text file:
+      > git tag > git-tags.txt
+
+4.    Open the git-log.txt and search for the commit. Copy the hashcode from
+      notepad and paste into the Putty terminal using the right click.
+      Then create a patch by using the 'git show' command with the 
+      corresponding hash.
+      > git show 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > quote-patch.txt
+
+5.    Check out v3.0 from Diffutils repo:
+      > git checkout v3.0
+
+6.    > patch -p1 < quote-patch.txt
+      The patch was not able to find some files:
+      	  HACKING
+	  diffutils.texi
+	  help2man
+      And had failed to completely patch some files:
+      	  README
+	  README-hacking
+	  cfg.mk
+	  diff.c
+	  diff3.c
+
+7.    I can check the status of the patch by:
+      > git status
+      This shows all modified and untracked files.
+
+8.    Revert changes on not *.c files using:
+      C-x v = C-x v u
+      Which opens the vc-diff buffer and reverts all changes.
+   
+9.    Revert changes in *.c files which do not affect code (is part of a 
+      comment).  We can revert hunks using the command:
+      C-u C-c C-a
+
+10.   Check the *.c.rej files for any patches that were not applied and change
+      them manually.
+
+11.   To check what files will be removed running 'git clean':
+      > git clean -n
+      We can then clean the status by:
+      > git clean -f
+      The command refuses to clean without the force option.
+
+12.   We can check the status again using:
+      > git status | grep 'modified'
+      The only six mofified files are - cmp.c, diff.c, diff3.c, dir.c, sdiff.c,
+      util.c
+      This will output only 6 files that were modified and we can then output 
+      the quote-3.0-patch.txt by:
+      > git diff > quote-3.0-patch.txt
+
+13.   For this step I had switch over to lnxsrv02 instead. I built the modified
+      version of Diffutils using the following commands:
+      > ./bootstrap
+      > ./configure
+      > make
+
+14.   Place the contents of the src file into a diffutils-3.0-patch directory.
+      Check out diffutils v3.0 and do the same however place it into the
+      diffutils-3.0 directory.  Then invoke:
+      > ./diffutils-3.0-patch/diff -pru diffutils-3.0 diffutils-3.0-patch > 
+      	quote-3.0-test.txt
+      There are files are not identical.
+
+15.   The differences are innocuous, they are part of the changes from ' to `.

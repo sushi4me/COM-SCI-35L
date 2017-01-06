@@ -1,0 +1,73 @@
+COM SCI 35L
+Week 1
+
+::OVERVIEW
+
+user -> shell -> kernel
+
+lnxsrv0X.seas.ucla.edu
+* new servers: lnxsrv07, lnxsrv01
+* VPN for remote access
+* SSH: nkong@lnxsrv07.seas.ucla.edu
+
+command line interface vs. graphical user interface
+* control
+* multitasking
+* remote access
+
+::SHELL COMMANDS
+
+<up arrow>	previous command
+<tab>		auto-complete
+!!		replace with previous command
+![str]		refers to previous command and reuses
+^[str]		replace previous command with new [str]
+
+./		current directory
+pwd		print current directory
+cd ~		home directory
+cd .		current directory
+cd /		root directory
+cd ..		parent directory
+
+mv		rename/move
+cp		copy
+rm		remove file
+rm -r		remove directory
+mkdir		create directory
+rmdir		remove directory
+ls -l		list contents with details (-l option)
+
+ln		create link
+		* hard links: point to physical data
+		* soft links: symbolic links, points to a file
+touch		update access and modification time to current
+		* touch -t 201101311759.30 filename
+		  2011 January 31 17:59:30
+
+d - directory
+r - readable
+w - writable
+x - executable
+(file type) (user permissions) (group permissions) (other permissions) (# hard links) (owner) (group name) (size) ...
+
+chmod		change file permissions
+		* u, user
+		* g, group
+		* o, other
+		* a, all
+		* +, add specified modes
+		* -, remove specified modes
+		* =, set specific modes
+		* 7 full, 6 rw, 5 rx, 4 r, 3 wx, 2 w, 1 x, 0 none
+		* chmod [refer][operator][modes] filename
+		* chmod 664 filename
+
+find 		searches for files in directory
+		* ?, matches any single character in a filename
+		* *, matches any number of characters in a filename
+		* [], matches any one of the characters inbetween the brackets (e.g. [0-9])
+		* find .-name my*
+
+whatis		returns name section of man page
+whereis		locates the binary, souce, and man page files for a command

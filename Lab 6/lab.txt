@@ -1,0 +1,91 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab.txt
+
+** The tr2b and tr2u commands should take in two arguments and a third argument
+   as a file. The first two arguments should also be in equal length; we ignore
+   special characters like that in the 'tr' command.
+
+1. In tr2b.c we use getchar() and putchar() to check the arguments and their
+   length. If they do not match up or if an argument is missing, then report
+   back an error.
+
+2. In tr2u.c we repalce the getchar() and putchar() with system calls, read and
+   write respectively.
+   getchar() -> read(0, &buffer, 1);
+   putchar() -> write(1, &buffer, 1);
+
+3. Generate a file that is 5,000,000 bytes or larger.
+   > dd if=/dev/urandom of=testFile1.txt bs=5000000 count=1   
+
+4. Using 'strace -c' I was able to get a detailed description of how many
+   system calls were made in the process of running the code.
+   
+   Here we are copying testFile2.txt to test_tr2b.txt, this version of tr makes
+   very little system calls thus runs very quickly (compared to tr2u).
+   > strace -c ./tr2b 'n' 'k' < testFile1.txt > test_tr2b.txt
+
+   % time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 32.00    0.000040          20         2           read
+ 20.00    0.000025           3         9           mmap
+ 11.20    0.000014           4         4           mprotect
+  8.80    0.000011          11         1           write
+  6.40    0.000008           4         2           open
+  6.40    0.000008           2         4           fstat
+  5.60    0.000007           7         1           munmap
+  3.20    0.000004           4         1         1 access
+  3.20    0.000004           4         1           execve
+  1.60    0.000002           1         2           close
+  0.80    0.000001           1         1           brk
+  0.80    0.000001           1         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000125                    29         1 total
+   
+   Here we are copying testFile1.txt to test_tr2u.txt. In comparison to tr2b
+   this version of tr is fairly slow because it is making millions of system
+   calls for each character processed.
+   > strace -c ./tr2u 'n' 'k' < testFile1.txt > test_tr2u.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 55.55    5.973021           1   5000000           write
+ 44.45    4.780189           1   5000002           read
+  0.00    0.000010          10         1           execve
+  0.00    0.000007           7         1         1 access
+  0.00    0.000005           1         7           mmap
+  0.00    0.000004           4         1           brk
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         2           fstat
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   10.753236              10000024         1 total
+
+   The next two commands copied the file to the terminal:
+   > strace -c ./tr2b 'n' 'k' < testFile1.txt
+   > strace -c ./tr2u 'n' 'k' < testFile1.txt
+   Again, the results are fairly similar, in the fashion that tr2b makes
+   only a handful (29 to be exact) of system calls. The command tr2u makes
+   millions of system calls because it is doing them for every single character
+   seen inside the testFile1.txt.
+
+5. Using the 'time' command we can invoke the tr2b and tr2u commands to find
+   the time they will take to execute.
+
+   > time ./tr2b 'n' 'k' < testFile1.txt
+   real    0m0.002s
+   user    0m0.000s
+   sys     0m0.001s
+   > time ./tr2u 'n' 'k' < testFile1.txt   
+   real    0m6.563s
+   user    0m0.308s
+   sys     0m6.218s
+
+   Given these times, we can see that the buffered version takes much less
+   time than the unbuffered version which makes millions of system calls.
+   The difference between tr2b and tr2u is about 1:3281, we also see that
+   much of the time spend in executing tr2u is spent in sys.

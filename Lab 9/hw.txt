@@ -1,0 +1,24 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	hw.txt
+
+1.	Over SSH, the data is encrypted therefore it would not be understandable
+	despite another team listening over the channel. Also they do not have
+	the private key to decrypt the message.
+
+	Tapping into the keyboards would allow for teams to gain access to the
+	username and password. This allows them to login to obtain the private
+	key.
+
+	If the team had physical control of the USB then they would be able to
+	obtain the private key. This would allow them to decrypt any incoming
+	messages from clients.
+
+2.	The command 'gpg --verify' can only verify document integrity however
+	gives no reference as to its origin. It could be the case that there
+	is a user C which sits between two communicating users A and B which
+	changes the message digest and the public key identifier. Upon 
+	receiving this message we only know the contents but not the origin.
+	Using a certificate of authority we are able to verify the identity
+	of the sender based on digitally issued certificates.

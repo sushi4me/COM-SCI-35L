@@ -1,0 +1,37 @@
+#Nathan Kong
+#204 401 093
+
+#!/bin/bash
+
+#Get all words within the <td> tag
+grep -E '<td>.+</td>' |
+
+#Only grab the even lines, the odd lines are English
+awk 'NR%2==0' |
+
+#Remove backslashes
+sed 's/\///g' |
+
+#Remove <td> tags
+sed 's/<td>//g' |
+
+#Remove <u> tags
+sed 's/<u>//g' |
+
+#Remove spaces
+sed 's/ //g' |
+
+#Replace commas with new lines
+sed 's/,/\n/g' |
+
+#Replace backticks with single quote
+sed "s/\`/'/g" |
+
+#Lower case
+tr '[:upper:]' '[:lower:]' |
+
+#Remove non-Hawaiian words
+grep -v "[^pk'mnwlhaeiou]" | 
+
+#Sort
+sort -u

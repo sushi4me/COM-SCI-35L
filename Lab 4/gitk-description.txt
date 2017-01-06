@@ -1,0 +1,24 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	gitk-description.txt
+
+TOP LEFT WINDOW:
+This window displays information on the structure of the repository.  The
+heirarchy displays all the master branch, HEAD and commits made by users.
+
+TOP MIDDLE WINDOW:
+This window displays accompanying information about the selected commit in
+the TOP LEFT WINDOW, in particular the person who made the commit and their
+e-mail.
+
+TOP RIGHT WINDOW:
+Displays the corresponding time stemp of the selected commit.
+
+BOTTOM LEFT WINDOW:
+Tells information about the commit - the author, committer, parent/child
+commit, associated branches and changelog.
+
+BOTTOM RIGHT WINDOW:
+Window with comments, usually affected files of the commit.
+

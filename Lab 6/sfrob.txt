@@ -1,0 +1,95 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	sfrob.txt
+
+While implementing 'sfrobu' I received an error regarding reallocating memory
+for the /proc/self/maps file.  Since this is a regular file I need to allocate
+enough memory for the entire file, however this cannot be done since attempting
+to get the size of this particular file will return 0.  Therefore instead of
+multiplying by 2 whenever we do not have space I opted to simply reallocated
+1 extra space for the new character read.
+
+I originally thought the 'tr' command would take binary as input however
+the proper formatting is '\NNN' where NNN is the octal representation of
+the symbol. The conversions can be done simply through a short program
+which does the XOR with decimal 42 for every ASCII character.
+
+1. I created different size files to test the three different versions of
+   'sfrob'. The results should tell us that system calls take a lot of time
+   and thus should see a greater time for 'sfrobu' as compared to 'sfrob'.
+
+2. I first attempted to test them using a simple printf. I used the example
+   given from Lab 5:
+   '*~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4'
+
+   There were 17 comparisons made.
+
+   *sfrob
+	real	0m0.001s
+	user 	0m0.000s
+	sys  	0m0.001s
+
+   *sfrobu
+	real	0m0.002s
+	user 	0m0.000s
+	sys  	0m0.001s
+
+   *sfrobs
+	real    0m0.005s
+	user    0m0.000s
+	sys     0m0.006s
+
+
+3. Next we use a 2MB randomly generated file as input.
+   > head --bytes=2000000 /dev/urandom > input.5MB.txt
+   > time ./sfrob < input_2MB.txt > sfrob_2MB.txt
+   > time ./sfrobu < input_2MB.txt > sfrobu_2MB.txt
+   > time ./sfrobs < input_2MB.txt > sfrobs_2MB.txt
+
+   There were 90738 comparisons made.
+
+   *sfrob
+	real	0m0.084s
+	user 	0m0.052s
+	sys  	0m0.003s
+
+   *sfrobu
+	real	0m2.411s
+	user 	0m0.110s
+	sys  	0m2.270s
+   
+   *sfrobs
+	real    0m0.183s
+	user    0m0.008s
+	sys     0m0.014s
+
+4. Finally, we test with a 5MB randomly generated file as input.
+   > head --bytes=5000000 /dev/urandom > input_5MB.txt
+   > time ./sfrob < input_5MB.txt > sfrob_5MB.txt
+   > time ./sfrobu < input_5MB.txt > sfrobu_5MB.txt
+   > time ./sfrobs < input_5MB.txt > sfrobs_5MB.txt
+
+   There were 253975 comparisons.
+
+   *sfrob
+	real	0m0.206s
+	user 	0m0.129s
+	sys  	0m0.008s
+
+    *sfrobu
+	real	0m6.108s
+	user 	0m0.321s
+	sys  	0m5.689s
+
+    *sfrobs
+	real    0m0.251s
+	user    0m0.026s
+	sys     0m0.017s
+
+5. From the data collected in these tests we can see that 'sfrobu' does have
+   the greatest amount of time taken in sys compared to the other two
+   implementations. The 'sfrobu' command also takes the most time to execute
+   due to the system calls for every character. The shell 'sfrobs' appears to
+   have a middle ground between the number of system calls it will make, with
+   'sfrob' having the least amount.

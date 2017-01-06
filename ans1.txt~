@@ -1,0 +1,75 @@
+1.  man -k keyword
+Use the command 'man man' to look up the options.
+
+2.  /usr/bin/cp
+    /usr/bin/wc
+The 'whereis' command gives the location of the file, 'which' also works.
+
+3.  find /usr/bin -name "?" -executable
+Use the find command and its options to narrow the search to single character
+commands.
+    /usr/bin/w
+shows who is logged on and what they are doing
+    /usr/bin/x
+a portable, network-transparent window system
+    /usr/bin/[
+check file types and compare values
+
+4.  readlink /usr/bin/emacs
+    /etc/alternatives/emacs
+
+5.  The symbolic g+s allows the group to use the file as if they were the owner.
+The symbolic o-x takes away the executable permission for 'others'.
+
+6.  find -mtime -21 -print
+Use the options of 'find' to restrict files that have been accessed within the
+past 21 days.
+
+7.  find -mtime -21 -type d -print
+Use the same command as before, however set the type of files to only be
+directories.
+
+8.  find /usr/bin -type l
+Use 'whereis' option to find the location of 'find', then use the 'find' command
+to only show symbolic links; 242 of them are symbolic links.
+
+9.  cd /usr/bin
+    ls -lt
+The oldest file in the directory is detect_ppa, accessed Sept. 8, 2000.
+
+10. The command locale get its data from localedef, using the man pages for
+locale we find that the command when invoked without arguments gives us
+information on the current locale environment.  The localedef command on the
+other hand defines the locale environment.
+
+11. The command 'C-h a sort ENTER' allows for a search through emacs manual.
+Buffer-menu-sort
+sort-columns
+sort-fields
+sort-lines
+sort-numeric-fields
+sort-pages
+sort-paragraphs
+sort-regexp-fields
+tabulated-list-col-sort
+tabulated-list-sort
+
+12. The command 'C-h b' gives a list of commands in emacs.
+C-M-a	move backward to the beginning of a line
+C-M-b	move backward one character
+C-M-c	exit from the inner-most recursive edit
+C-M-d	move forward down one level of parentheses
+C-M-e	move forward to the beginning of a line
+C-M-f	move forward one character
+C-M-g	undefined
+C-M-h	mark function
+
+13. Found the C-g command through 'C-h b Enter'.
+C-g is the keyboard-quit command, signals a 'quit' condition.
+
+14. Found the yank function through 'C-h a yank Enter'.
+The yank function reinserts the last stretch of killed text.
+
+15. Found the dired function through 'C-h a dired Enter'.
+The emacs command dired can view, delete, rename, print, etc. files within a
+directory whereas the command ls -l can only view the files in the directory.

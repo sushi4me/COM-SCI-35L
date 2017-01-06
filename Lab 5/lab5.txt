@@ -1,0 +1,66 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab5.txt
+
+1.	Download the version of coreutils and the patch.
+	> wget web.cs.ucla.edu/classes/fall16/cs35L/assign/coreutils-with
+	  -bug.tar.gz
+	> wget web.cs.ucla.edu/classes/fall16/cs35L/assign/coreutils.diff
+
+2.	Unpack the coreutils-with-bug.tar.gz.
+	> tar -zxf coreutils-with-bug.tar.gz
+
+3.	Attempt to configure and make the coreutils as-is.
+	> ./configure
+	> make
+	However, the result is a failure because the variable 'futimens' is
+	declared twice with differing types.  It is declared once as an int,
+	and a second time as extern int.
+
+4.	Patch the version of coreutils while within the directory of coreutils
+	and then attempt to configure and make coreutils.
+	> path -p0 < coreutils.diff
+	> ./configure
+	> make
+
+5.	Recreate the bug following the steps:
+	> tmp=$(mktemp -d)
+	> cd $tmp
+	> touch -d '1918-11-11 11:00 GMT' wwi-armistice
+	> touch now
+	> sleep 1
+	> touch now1
+	> TZ=UTC0 ~/Lab5/coreutils-with-bug/src/ls -lt --full-time
+	  wwi-armistice now now1
+	The result is a list of the three files sorted by their time stamps in
+	descending order.  However, the old file (dating back to 1918) appears
+	at the top of the list where the newest time-stamped files appear.
+
+6.	Find the bug within ls.c via GDB.
+	> emacs ls.c
+	> M-x g d b Enter
+	Place breakpoints at various functions to find a possible bug.
+	By intuition, I would suspect an overflow condition in which a
+	function returns the wrong value when a large number is being
+	used in a arithmetic calculation.
+
+	Using gdb, I was able to step through the code using 's' and 'n',
+	's' is able to step into functions whereas 'n' is not.  
+
+	**Changing the diff variable to accomodate for a larger range got
+	rid of the overflow problem in the function.  Therefore we also cast
+	the three variables used in the function to be 'signed long int' 
+	instead of just 'int'.
+
+7.	Make a copy of the timespec.h and naming it timespecnew.h.  The
+	changes were made in timespecpatch.h and then the changelog was
+	modified.
+	> C-x 4 a
+	> diff -u timespec.h timespecnew.h > lab5.diff
+
+8.	Attempting to reproduce the error in the home directory of the SEASnet
+	home directory will show that the wwi-armistice file was accessed in
+	the future (year 2054).  The file shows up in the correct order, given
+	that the time stamp is incorrect.  This is probably due to the mismatch
+	between 64-bit and 32-bit architectures.

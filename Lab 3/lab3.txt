@@ -1,0 +1,56 @@
+Name:	Nathan Kong
+UID:	204 401 093
+TA:	Aishwarya Kamal
+File:	lab3.txt
+
+LABORATORY: INSTALLING A SMALL CHANGE TO A BIG PACKAGE
+
+1. I downloaded coreutils-7.6 using:
+   wget http://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+
+2. Extract the tar.gz with the following options:
+   tar -xzvf coreutils-7.6.tar.gz
+   The options were found via 'man tar', x being extract, z filters gzip, v
+   prints the processed files, and f to use archive files.
+
+3. Make a new directory:
+   mkdir ~/coreutilsInstall
+
+4. Changing directories to coreutils-7.6 and executing the following to compile
+   and install:
+   ./configure --prefix=/u/ee/ugrad/nathank/coreutilsInstall; make; make install
+   I have to set the prefix in order to direct the installation into a specific
+   directory, without this I would not be able to install the files into the
+   default path due to restricted permissions.
+
+5. To reproduce the bug I can navigate to:
+   /u/ee/ugrad/nathank/coreutils-7.6/src/
+   and execute the command:
+   ./ls -l
+   This should reproduce the bug since it calls coreutils' version of ls.
+   Calling ls by itself without indicating the path to it in coreutils-7.6 will
+   call the ls located in /bin/ which will not reproduce the bug.
+
+6. Copy and paste the patch via Emacs, named ls.patch and relocate it into the
+   same directory as /u/ee/ugrad/nathank/coreutils-7.6/src/
+
+7. Apply the patch to the ls.c file located in .../coreutils-7.6/src:
+   patch -p1 < ls.patch
+   We choose the option -p1 in order to strip away the first slash in Brady's
+   patch.  The original path within the file is not accurate therefore we
+   strip it away to have 'src/ls.c' which is where our file is actually located.
+
+8. After patching the ls.c file, change directories back to .../coreutils-7.6
+   and execute the 'make' command to compile the new changes.
+
+9. Afterwards I tested the newly patched ls in the .../coreutils-7.6/src by
+   using the command:
+   ./ls -l
+   the new dates are changed from numerical only to also include the actual
+   month's labels.
+
+10. To test I created a new file in the directory using:
+    touch -t 201402200000 oldfile.txt
+    Using the ls command to view the file, it retains the intended formatting.
+    Recently modified files will show the month, date and time it was modified
+    whereas a year-old modified file will have the year instead of a time.

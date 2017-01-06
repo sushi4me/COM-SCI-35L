@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#Nathan Kong
+#204 401 093
+
+#Initialization
+INPUT_DIR=$1
+FILE_NAMES=`ls -a $INPUT_DIR`
+declare -a FILE_ARRAY
+let file_num=0
+
+#Change directory
+cd "$INPUT_DIR"
+
+#Find all regular files
+for FILE in $FILE_NAMES
+do
+    if [ -f "$FILE" ]
+    then
+	FILE_ARRAY[$file_num]=$FILE
+	file_num=$((file_num+1))
+    fi
+done
+
+#No files are present
+if [ $file_num -le 1 ]
+then
+    exit 0
+fi
+
+#Comparison of sorted files based on locale
+let counter=0
+
+while [ $counter -lt $file_num ]
+do
+    #Check the file is readable
+    if [ -r "${FILE_ARRAY[$counter]}" ]
+    then
+	#Iterate through the rest of the files
+	for((j=$counter+1; j<file_num; j++))
+	do
+	    #Check file to compare to is readable
+	    if [ -r "${FILE_ARRAY[$j]}" ]
+	    then
+		#Compare and link, otherwise do nothing
+		cmp -s "${FILE_ARRAY[$counter]}" "${FILE_ARRAY[$j]}"
+		if [ $? -eq 0 ]
+		then
+		    temp="${FILE_ARRAY[$j]}"
+		    rm "${FILE_ARRAY[$j]}"
+		    ln "${FILE_ARRAY[$counter]}" "$temp"
+		fi
+	    fi
+	done
+    else
+	#Report file that is not readable
+	echo "${FILE_ARRAY[$counter]} cannot be read"
+    fi
+    counter=$((counter+1))
+done
